@@ -7,675 +7,143 @@
 </head>
 <body>
 	
-	<h1>Voyage en Azurhyon</h1>
-	
-Déroulement du voyage
-<br/>	
-<br/>Une journée de voyage se déroule en plusieurs étapes :
-<br/>1)	Déterminer la météo du jour
-<br/>2)	Déterminer le type de route emprunté et le genre de paysages rencontrés 
-<br/>3)	Jet d’Orientation
-<br/>4)	Jet de Survie et ses effets (chance, désagréments, contrariétés, dangers, périls)
-<br/>5)	Jet de Marche
-<br/>6)	Décrire un lieu ou paysage notable aperçu
-<br/>7)	Décrire un évènement notable, scène pittoresque ou rencontre
-<br/>8)	Nuitée : jet de Renseignement ou de Survie et de Nourriture. 
-<br/>9)	Jet de Péril éventuel
-<br/>10)	Eventuellement tours de garde
+	<form action="#" th:action="@{'/azurhyon/voyage'}" th:object="${voyage}" method="post">
 
-	<h2>Météo</h2>
+		<h1>Voyage en Azurhyon</h1>
 
-Entrée : climat
-<br/>
-Entrée : saison
-<br/>
-Entrée : temps d'hier
-<br/>
-Sortie : temps d'aujourd'hui
-Sortie : effets du temps
+		<h2>Météo</h2>
 
+		<div>
+		Climat
+		<select th:field="*{meteo.clim}">
+			<option th:each="climat : ${climats}"
+        		    th:value="${climat.name()}"
+            		th:text="${climat.toString()}">
+    		</option>
+		</select>
+		</div>
+		
+		<div>
+		Saison 
+		<select th:field="*{meteo.sais}">
+			<option th:each="saison : ${saisons}"
+    	    	    th:value="${saison.name()}"
+    	        	th:text="${saison.toString()}">
+    		</option>
+		</select>
+		</div>
+		
+		<div>
+		Temps de la veille 
+		<select th:field="*{meteo.hier}">
+			<option value=0 th:text="*{meteo.tpsToString(0)}"></option>
+			<option value=1 th:text="*{meteo.tpsToString(1)}"></option>
+			<option value=2 th:text="*{meteo.tpsToString(2)}"></option>
+			<option value=3 th:text="*{meteo.tpsToString(3)}"></option>
+			<option value=4 th:text="*{meteo.tpsToString(4)}"></option>
+			<option value=5 th:text="*{meteo.tpsToString(5)}"></option>
+			<option value=6 th:text="*{meteo.tpsToString(6)}"></option>
+			<option value=7 th:text="*{meteo.tpsToString(7)}"></option>
+			<option value=8 th:text="*{meteo.tpsToString(8)}"></option>
+		</select>
+		</div>
+		
+		<div>
+		Temps d'aujourd'hui
+		<input type="text" th:value="*{meteo.tpsToString(meteo.aujd) + '  (' + meteo.aujd +')'}" disabled/>
+		<input type="hidden" th:field="*{meteo.aujd}"/>
+		<button type="submit" name="meteoButton">Calcul du temps</button> 
+		<button type="submit" name="jourSuivant">Jour suivant</button> 
+		</div>
+		
+		<div>
+		Effets potentiels (au choix du MJ) : 
+		<span th:text="${effetsDuTemps}"></span>
+		</div>
 
-Déterminer le temps :
-Pour déterminer le temps, on tire le dé une fois par jour. 
-Le « temps de saison » permet de coller le temps typique correspondant au biome et à l'époque de l'année.
+		<h2>Route et paysage</h2>
 
-	On prend un temps de départ (normalement celui obtenu précédemment, mais le MJ peut le fixer arbitrairement au début) et on le fait varier avec le tableau suivant, en suivant l'ordre des flèches si c'est +, en sens inverse si c'est -. 
-D20	1	2-3	4-5	6-8	9-12	13-15	16-17	18-19	20
-Temps	-4	-3	-2	-1	0	+1	+2	+3	+4
-	
-Les climats et saisons :
-Le MJ devra prendre en compte le climat local pour déterminer les effets du temps. 
+		<div>
+		Type de route : 
+		<select th:field="*{route.type}">
+			<option th:each="rt : ${routeTypes}"
+    	    		th:value="${rt.name()}"
+    	        	th:text="${rt.toString()}">
+    		</option>
+		</select>
+		<button type="submit" name="update"> &#128190; </button> 
+		</div>
+		
+		<h2>Orientation</h2>
+		
+		<div>
+		<span th:text="*{route.type}"></span> : les PJs 
+			<span th:if="*{route.diff < 10}" th:remove="tag">peuvent</span>
+			<span th:unless="*{route.diff < 10}" th:remove="tag">ne peuvent pas</span>
+			complémenter leur Orientation par du Renseignement (Charme, CHA).
+		<br/>
+		Score des PJs en Orientation (Exploration, PER) :
+		<input type="number" th:field="*{orientation}"/>
+		<button type="submit" name="orientationResult"> &#128190; </button> 
+		</div>
+		Résultat : <span th:text="*{succesOrientation}"></span>
+		<input type="hidden" th:field="*{succesOrientation}"/>
+		
+		<h2>Survie</h2>
 
-Climat Polaire
-Temps	Eté	Hiver
-Très beau	Frais (rare), pas de vent, sec, ciel très ensoleillé	Glacial, pas de vent, sec, ciel limpide
-Beau	Froid, vent faible, sec, ciel ensoleillé	Très froid, pas de vent, sec, ciel légèrement couvert
-Assez beau	Froid, vent faible, normal, ciel légèrement couvert, sec	Très froid, vent faible, sec, ciel nuageux, sec
-Assez mauvais	Froid, vent moyen, normal, ciel couvert, gel	Très froid, vent moyen, sec, ciel gris, givre
-Mauvais	Très froid, vent moyen, sec, ciel très couvert, poudreuse	Glacial, vent fort, sec, ciel couvert, poudrerie continue
-Très mauvais	Glacial, vent fort, sec, ciel sombre, tempête de neige	Froid extrême, vent violent, très sec, ciel sombre, blizzard
-
-Climat Subarctique
-Temps	Eté	Hiver
-Très beau	Chaleur douce, pas de vent, sec, ciel très ensoleillé	Froid sec, pas de vent, sec, ciel limpide
-Beau	Bon ou chaud, vent faible, sec, ciel ensoleillé, sec	Froid, pas de vent, sec, ciel ensoleillé, sec
-Assez beau	Bon, vent faible, normal, ciel légèrement couvert, sec	Très froid, vent faible, sec, ciel légèrement couvert, sec
-Assez mauvais	Bon, vent faible, normal, ciel nuageux, averses légères	Froid, vent moyen, sec, ciel couvert, gel
-Mauvais	Frais, vent moyen, humide, ciel couvert, pluie froide	Très froid, vent fort, sec, ciel très couvert, neige
-Très mauvais	Froid, vent fort, humide, ciel sombre, pluie glacée	Glacial, vent violent, sec, ciel sombre, blizzard
-
-Climat Continental
-Saison	Très mauvais	Mauvais	Assez mauvais	Assez beau	Beau	Très beau
-Printemps	Pluie froide, vent fort, grêle	Pluie froide, ciel plombé	Temps changeant, ciel gris, crachin, fraîcheur humide	Temps doux, nuages dispersés, frais mais ensoleillé	Air doux, ciel clair, ensoleillé	Ciel dégagé, soleil, température agréable
-Été	Canicule, orages, vent chaud	Chaleur accablante, ciel couvert, pluie chaude	Temps lourd, chaleur humide	Chaud mais supportable, ciel ensoleillé mais nuageux	Chaud, sec, ciel dégagé, brise agréable	Chaleur douce, ciel limpide, air sec, soleil radieux
-Automne	Pluie froide, rafales violentes, ciel noir	Vent fort, ciel couvert, air frais	Fraîcheur humide, ciel gris	Temps frais, ciel voilé	Douceur automnale, ciel dégagé	Lumière dorée, air sec, ciel clair, fraîcheur agréable
-Hiver	Tempête de neige, froid glacial, vent violent	Chutes de neige, ciel sombre, Froid intense, vent glacial	Neige ou verglas, froid, vent, ciel couvert	Froid sec, ciel voilé mais éclaircies	Temps sec, frais mais lumineux, ciel dégagé	Frais, sec, ciel bleu profond
-
-Climat Tempéré
-Saison	Très mauvais	Mauvais	Assez mauvais	Assez beau	Beau	Très beau
-Printemps	Giboulées (orages de grêle, pluie froide), vent fort	Forte pluie, fraîcheur	Nuages et averses, fraîcheur, ou nuages épais, bruine	Temps doux, ciel changeant ou frais mais dégagé	Soleil doux, ciel bleu	Soleil éclatant, brise légère
-Été	Orages violents, chaleur humide	Temps lourd, pluie orageuse, moiteur	Chaleur humide et nuages bas	Chaud, ciel partiellement dégagé	Chaleur modérée, ciel bleu, vent léger	Soleil franc, brise douce, air sec
-Automne	Bourrasques, vent fort, pluie froide.	Pluie régulière, vent moyen, froid humide, ciel couvert	Nuages gris, humidité, fraîcheur	Temps doux, ciel voilé, frais mais lumineux	Temps clair, air vif soleil bas	Journée ensoleillée et sèche, ciel limpide
-Hiver	Tempête, neige ou verglas, vent glacial	froid humide, neige/pluie froide, ciel gris	Humidité, froid modéré, gel, ciel gris	Froid sec, ciel assez lumineux	Froid doux, soleil hivernal	Air vif, ciel bleu, soleil
-
-Climat Tempéré chaud (méditerranéen)
-Saison	Très mauvais	Mauvais	Assez mauvais	Assez beau	Beau	Très beau
-Printemps	Orage violent, grêle, rafales violentes	Pluie soudaine, ciel sombre, humidité	Temps variable, nuageux, humide	Soleil intermittent, air doux, clair mais venteux	Chaleur douce, soleil généreux, ciel clair	Temps radieux, ciel dégagé, brise légère
-Été	Canicule, air très sec, sirocco (vents brûlants)	Très chaud, poussière, ciel blanc	Chaleur sèche, ciel voilé, vent faible	Chaud avec brise marine	Chaleur modérée, ciel limpide	Brise fraîche, soleil doux, ciel limpide
-Automne	Orage cévenol, pluie diluvienne	Averses intenses, vent irrégulier	Temps instable, ciel changeant, humidité	Chaleur résiduelle, temps clair avec fraîcheur, ciel voilé	Doux, soleil présent	Ciel azur, lumière dorée, douceur, vent faible
-Hiver	Vent violent, pluie froide, ciel bas	Pluie, ciel gris, vent, temps humide, froid modéré	Nuageux, air frais, humide, vents côtiers	Frais mais lumineux, temps doux, quelques nuages	Ciel bleu, température douce	Soleil, pas de vent, air doux
-
-Climat de savane
-Temps	Eté (saison humide)	Hiver (saison sèche)
-Très beau	Caniculaire, pas de vent, sec, ciel très ensoleillé, sec	Chaleur sèche, pas de vent, air limpide, ciel bleu intense
-Beau	Très chaud, pas de vent, sec, ciel ensoleillé, sec	Très chaud, pas de vent, sec, ciel très ensoleillé
-Assez beau	Chaud, vent faible, normal, ciel légèrement couvert, sec	Très chaud, vent faible, sec, ciel dégagé
-Assez mauvais	Chaud, vent faible, humide, ciel nuageux, averse	Chaud, vent moyen, sec, ciel légèrement couvert, sec
-Mauvais	Très chaud, vent moyen, très humide, ciel couvert, forte pluie	Très chaud, pas de vent, sec, ciel très ensoleillé
-Très mauvais	Très chaud, vent fort, moite, ciel sombre, orage tropical	Chaleur sèche, pas de vent, air limpide, ciel bleu intense
-
-Climat équatorial
-Temps	Climat unique toute l’année
-Très beau	Soleil éclatant, chaleur stable, légère brise, air étonnamment sec pour la région
-Beau	Chaleur agréable, ciel ensoleillé avec quelques nuages, humidité normale
-Assez beau	Chaleur stable, ciel légèrement couvert, air humide mais calme
-Assez mauvais	Ciel très couvert, chaleur moite, petite pluie fréquente
-Mauvais	Grosse averse chaude, ciel sombre, atmosphère moite, vent moyen
-Très mauvais	Orage tropical violent, forte chaleur moite, vent fort, pluie torrentielle, visibilité réduite
-
-Climat de mousson
-Saison	Très mauvais	Mauvais	Assez mauvais	Assez beau	Beau	Très beau
-Printemps	Chaleur moite, pluie soudaine, orages, vents chauds	Temps instable, humidité croissante, ciel couvert, pluie légère	Chaleur humide, ciel menaçant	Temps chaud, nuages élevés, ciel variable	Soleil abondant, chaleur agréable	Temps chaud et sec, ciel clair
-Été	Pluie torrentielle, vents puissants, inondations	Pluie continue, vent fort, ciel sombre	Très humide, averses régulières, chaleur moite	Chaud et humide, éclaircies	Alternance pluie/soleil, chaleur douce	Soleil et clarté entre les pluies
-Automne	Rafales post-mousson, orages résiduels	Pluie fine persistante, air moite, ciel gris	Humidité élevée, ciel chargé	Temps encore chaud, soleil diffus avec quelques nuages	Temps doux, ciel clair dégagé	Temps sec, ciel bleu, brise légère
-Hiver	Froid humide, brouillard épais	Temps morne, vent modéré, ciel bas, pluie fine	Humidité résiduelle, fraîcheur, ciel couver	Temps frais, ciel changeant, peu de vent	Ciel clair et lumineux, température douce	Froid sec, ciel bleu, air calme
-
-Climat aride
-Temps	Eté 	Hiver 
-Très beau	Caniculaire, pas de vent, air limpide, ciel éclatant, sec	Douce chaleur diurne, nuit fraîche, ciel très clair, pas un souffle de vent
-Beau	Très chaud, pas de vent, sec, ciel ensoleillé	Chaleur agréable, pas de vent, sec, ciel ensoleillé
-Assez beau	Très chaud, vent faible, sec, ciel dégagé	Chaud doux le jour, froid la nuit, vent faible, sec, ciel dégagé
-Assez mauvais	Très chaud, vent moyen, sec, ciel légèrement couvert	Bon le jour, froid la nuit, vent faible, sec, ciel nuageux
-Mauvais	Très chaud, vent fort, sec, ciel couvert, chaleur suffocante	Chaud le jour, frais la nuit, vent moyen, sec, ciel nuageux
-Très mauvais	Caniculaire, vent violent, très sec, ciel gris, tempête de sable	Très chaud le jour, froid la nuit, vent fort, sec, ciel menaçant 
-
-Climat de haute montagne
-Saison	Très mauvais	Mauvais	Assez mauvais	Assez beau	Beau	Très beau
-Printemps	Tempête de neige, vents violents, avalanches, fonte soudaine, pluie verglaçante	Orages de montagne, neige fondue, visibilité réduite	Temps humide et froid, vent, brouillard	Air frais, ciel variable	Soleil clair, froid sec, fonte lente des neiges	Ciel lumineux et limpide, air vif et pur
-Été	Orages violents, brouillard, grêle	Pluie froide, vent en rafale	Nuages épais, vent frais, brume, fraîcheur	Temps frais, éclaircies	Air pur, ciel dégagé, température fraîche, vent calme	Temps radieux, fraîcheur agréable, vent léger
-Automne	Neige précoce, froid, vent violent, brouillard épais	Temps instable, pluie, froid humide	Vent, froid, ciel couvert	Air vif, ciel voilé ou variable	Fraîcheur sèche, ciel dégagé	Lumière claire, air cristallin, temps calme
-Hiver	Blizzard, températures extrêmes	Neige dense, brouillard, froid mordant, vent glacial	Froid vif, ciel chargé	Froid sec, quelques éclaircies	Ciel dégagé, froid supportable	Temps frais, montagne enneigée sous un ciel bleu éclatant
-
-Jet de résistance au temps :
-	Le temps ainsi déterminé peut permettre au MJ d'exiger un jet de Résistance au chaud ou au froid selon les conditions de voyage, notamment si les voyageurs affrontent des températures extrêmes.
-
-Route et paysage
-
-Route
-	Le type de route emprunté influe sur d'autres paramètres : la fréquentation, le caractère plus ou moins sauvage, les dangers potentiels. 
--	Grande voie : fréquentation très élevée (300 à 2000 personnes par jour), lieux d'étapes assurés, zone civilisée, sous protection. Grande artère de communication : marchands, caravanes, nobles, armées, colporteurs, paysans en déplacement. Fréquentation comparable à une voie rapide ou route nationale. Équipée de relais, auberges, bornes, parfois même ponts, aqueducs, protections contre les dangers.
--	Route : parfois aménagée, fréquentation élevée (50 à 300 personnes par jour), lieux d'étapes assurés, zone rurale, bandits. Relie des villages ou bourgs, circulée quotidiennement.  Messagers, soldats, marchands, voyageurs réguliers. Peut être patrouillée ou jalonnée de relais.
--	Chemin : fréquentation moyenne (10 à 50 personnes par jour), lieux d'étapes espacées, zone rurale, monstres errants ou bandits, chemin mal indiqué, route mal entretenue, passages parfois difficiles. Utilisé par les gens des campagnes, marchands, messagers, pèlerins. Parfois de petits convois ou caravanes. Peut devenir animé aux périodes de marché ou fêtes.
--	Sentier : faible fréquentation (2 à 10 personnes par jour), lieux d'étapes rares, zone sauvage, possibilité de rencontrer des monstres, risques de se perdre, passages difficiles, chemin étroit, impraticable pour les véhicules attelés. Usagé par quelques voyageurs ou marchands locaux. Peut rester désert plusieurs jours, puis voir passer un petit groupe. Peu de signalisation.
--	Hors-piste : hors des chemins civilisés, zone sauvage, reculée ou dangereuse, possibilité de rencontrer des monstres, risques de se perdre, passages difficiles. Souvent personne pendant plusieurs jours d’affilée. Quelques chasseurs, ermites, patrouilleurs ou aventuriers très rares.
--	Hard : zone dangereuse, loin de la civilisation, il faut trouver soi-même le chemin et se débrouiller pour tout, la progression est ardue, les monstres sont fréquents.
--	Heavy Hard : zone sauvage et dangereuse, réputée mortelle. Monstres et dangers fréquents.
-
-Paysage
-	Le paysage va surtout dépendre du type de région traversé. Pour bien l'imaginer et mieux le décrire on peut prendre en compte plusieurs facteurs.
--	le biome et la saison : les premières choses à déterminer pour avoir une petite idée de la suite 
--	le relief (plat, en cuvette, plateau, colline, vallonné, montagneux, à pic)  
--	la végétation (désert, steppe, prairie rase, arbustes, hautes herbes, plus ou moins boisé, du bouquet d'arbres à la forêt, jungle : végétation inextricable)
--	l'hydrographie (paysage plus ou moins sec, nappes souterraines (puits et points d'eau), cours d'eaux plus ou moins large (du ruisseau au fleuve) et plus ou moins puissants (torrent, rivière calme, fleuve en crue, etc.), lacs et étangs, marais, mer)
--	les activités (champs : quelles cultures ? pâturages : place de l'élevage ? exploitation marais, bois ou pierre. Moulins, ponts, tours, etc. Villes, villages, hameaux, région sauvage.) 
-
-Orientation
-
-Le personnage trouve son chemin.
-Durée : un jet d’Orientation vaut pour un trajet. Les longs voyages sont découpés en étapes et on fait un jet d’orientation par étape. 
-Le personnage peut faire un jet d’Orientation générale pour l’ensemble du trajet, qui servira alors de complément pour tout le voyage. 
-Difficulté : la difficulté d’Orientation peut être modifiée par des outils pour s’orienter (carte, boussole) ou au contraire l’absence de repères. Les circonstances peuvent également influer sur la difficulté (obscurité, mauvais temps, etc.). Au MJ d’apprécier la difficulté en tenant compte de ces paramètres. 
-Orientation
-Description	Difficulté
-Très facile (connaît le chemin par cœur)	0
-Facile (connaît le chemin, très bien balisé, Grande voie)	3
-Moyen (connaît à peu près le chemin, balisé, Route)	6
-Assez dur (possibilité de se tromper, Chemin)	9
-Difficile (Sentier, peu balisé, lacis de ruelle, forêt)	12
-Très difficile (Hors-piste, jungle, mer)	15
-Super dur (Hard)	18
-Extrêmement dur (Heavy Hard, labyrinthique)	21
-Héroïque (Labyrinthe complexe)	24
-Surhumain (Labyrinthe vicieux)	27
-Presque impossible	30
-Modificateurs :
--	Renseignements : un jet de Renseignements sert de complément à l’Orientation. On ne peut pas le faire si la fréquentation est trop faible (sentier et hors-piste). 
--	Météo : le mauvais temps rend l’orientation plus difficile car on voit moins les repères. 
--	Luminosité : des malus de vision se répercutent évidemment durement sur l’Orientation
--	Outils : carte, boussole, sextant, etc. facilitent grandement l’orientation. 
--	Degré de spécialisation du personnage en Orientation : Culture générale : le personnage n’a pas la Discipline correspondant au jet demandé, il utilise son score de compétence mais n’est pas considéré comme compétent (il n’a pas de bonus minimum), de plus, il a -1 score ; Discipline : pas de modificateur ; Spécialité : +1 score ; Expertise : +2 score. 
--	Entraide : Plusieurs personnages effectuent un jet et on garde le meilleur score comme base. Les autres jets viennent le complémenter (les mauvais lui apportent des malus). Mais on rappelle que les bonus sont divisés par deux à chaque complément, ça ne sert donc à rien que tout le monde fasse un jet. 
-Tableau de complément
-Score	0 et -	1 à 3	4 à 6	7 à 8	9 à 10	11 à 13	14 à 17	18 à 22	23 à 28	29+
-Bonus	-4	-3	-2	-1	0	+1	+2	+3	+4	+5
-
-Tableau de modificateur
-Modificateur	Difficulté
-Rend l’action 10 fois plus facile (carte chef d’œuvre)	-6
-6 fois plus facile (carte excellente à magnifique)	-5
-3 ou 4 fois plus facile (bonne ou très bonne carte)	-4
-Deux fois plus simple (boussole, sextant, carte assez bonne)	-3
-Aide le personnage (carte moyenne ; expert du biome)	-2
-Donne un petit coup de pouce (carte médiocre ; spécialiste du biome)	-1
-Normal	0
-Complique un peu (assez mauvais temps, faible luminosité, brume, mauvaise carte)	+1
-Complique (mauvais temps, pénombre, brouillard)	+2
-Deux fois plus dur (très mauvais temps, nuit, brouillard épais, carte nulle)	+3
-3 ou 4 fois plus dur (nuit sombre)	+4
-6 fois plus dur (carte ignoble ou fausse)	+5
-Rend l’action 10 fois plus difficile (ténèbres profondes)	+6
-Complique énormément l’action (obscurité totale)	+9
-
-Marge de succès
-Marge de succès	Résultats
--10 et -	Complètement perdu, s’éloigne de sa destination. -5 pour insister. -3 Survie.
-
--9 à -6	Perdu, tourne en rond. -3 pour insister. -2 Survie.
--5 à -3	Égaré, ne fait que le tiers de la distance prévue. -2 pour insister. -1 Survie.
--2 à -1	Fourvoyé, fait les 2/3 de la distance prévue -1 pour insister.
-0 à 1	Trouve son chemin difficilement
-2 à 3	Trouve son chemin
-4 à 6	Trouve son chemin facilement
-7 à 9	Trouve son chemin très facilement, +1 Survie.
-10 à 12	Trouve un très bon chemin, +2 Survie.
-13 à 15	Trouve le meilleur chemin, +3 Survie.
-16+	Trouve un raccourci, gagne du temps, +4 Survie.
-
-Insister : Si on est perdu on ne peut insister (donc refaire un jet) qu’une fois le chemin parcouru (et avec des malus en Orientation).
-
-Survie
-
-Le personnage cherche à éviter les zones à risques grâce à sa connaissance du milieu (espèces dangereuses, territoires de prédateurs, terrain difficile, etc.). 
-Condition : être attentif. Le personnage doit être concentré sur son environnement (mais il peut en même temps suivre une piste ou chercher à manger).
-Difficulté : La difficulté du jet de Survie (Survie, Exploration, PER) dépend du type de voie emprunté. 
-Modificateur : 
--	la marge de succès du jet d’Orientation. 
--	un jet de connaissance de la zone en complément (Savoir ou Renseignements)
--	l’entraide entre personnages (complément)
-	Succès : la marge de succès modifie le jet de bash du MJ et peut modifier la nature de l’évènement survenant au personnage. 
-Survie
-Voie	Difficulté 		Succès	Sécurité 
-Grand voie	3		-10 et -	-4 au jet de bash du MJ
-Route	6		-9 à -6	-3 au jet de bash du MJ
-Chemin	9		-5 à -3	-2 au jet de bash du MJ
-Sentier	12		-2 à -1	-1 au jet de bash du MJ
-Hors-piste	15		0 à 1	normale
-Hard	18		2 à 3	+1 au jet de bash du MJ
-Heavy Hard	21		4 à 6	+2 au jet de bash du MJ
-			7 à 9	+3 au jet de bash du MJ
-			10 à 12	+4 au jet de bash du MJ
-			13 à 15	+5 au jet de bash du MJ
-			16+	+6 au jet de bash du MJ
-
-	Evènement (jet de bash) : Le MJ tire 1D20 par jour pour voir si c'est une bonne journée. Le personnage peut tomber sur un bash ou avoir de la chance. 
-	Le MJ retire et additionne sur 10 ou 20. Sur 20+ le personnage a de la chance. 
-	La probabilité du personnage de tomber sur du bash dépend du type de voie emprunté et de sa marge de succès en Survie. 1 amène toujours un bash (le bonus de survie est alors appliqué à la gravité du bash).
-Voie	Grand voie	Route	Chemin	Sentier	Hors-piste	Hard	Heavy Hard
-Bash	1	1-2	1-3	1-4	1-5	1-6	1-7
-
-Lorsque le PJ tombe sur un bash, le MJ retire le dé pour déterminer la gravité de celui-ci. Sur un Péril, le MJ peut retirer le dé pour en déterminer la gravité. 
-Voie	Grand voie	Route	Chemin	Sentier	Hors-piste	Hard	Heavy Hard
-Désagrément	11-20	12-20	13-20	14-20	15-20	16-20	17-20
-Contrariété	5-10	6-11	8-12	9-13	11-14	12-15	13-16
-Danger	2-4	3-5	4-7	5-8	6-10	7-11	8-12
-Péril	1	1-2	1-3	1-4	1-5	1-6	1-7
-
-	Désagrément : Le personnage est affecté par un désagrément sans conséquence grave, le genre de petits tracas de la vie quotidienne qui vous pourrissent la journée. 
-	Contrariété : Le personnage doit faire face à un obstacle contraignant, qui lui prend du temps (1/2 journée de voyage) ou de l’argent (1D20 x10 PO).
-	Danger : Obstacle qu’on ne surmonte que difficilement (nécessite un test, voire une PP). Peut prendre du temps (quelques jours) ou de l’argent (-1D20 x100 PO). 
-	Péril : Un danger qui coûte généralement des PP à surmonter. Les gens normaux y laissent souvent la vie. Il est parfois sage de fuir. Le MJ refait un jet pour déterminer le niveau de péril. 
-Dé	1-3	4-9	10	11-20
-Péril	Péril national	Péril régional	Diablino	Péril local
-
-Chance
-Si le MJ fait un 20+ naturel (sans les bonus liés à la marge de succès du personnage, sinon il est trop facile d’avoir de la chance sur les routes sûres). 
-D20	20+	30+	40+	50+	60+
-Fréquence	8%	3%	0,5%	0,2%	0,04%
-Chance	Bonne journée	Super journée	Chanceux 	Très chanceux	Lutino
-	
-(20+) Bonne journée, le personnage gagne ou économise 1D20 PO.
-1	Nourriture	Repas partagé offert 
-2	Nourriture	Un verger ou un potager abandonné regorge de fruits ou de légumes mûrs
-3	Nourriture	Trouvent un animal mort / pris au piège
-4	Nourriture	On offre à boire aux PJ
-5	Nourriture	On offre aux PJ une ration de voyage pour la route (sandwich)
-6	Nourriture	On offre aux PJ des surplus du marché ou d’un restaurant « pour ne pas gaspiller »
-7	Soin	Les PJ ont l’occasion de se baigner ou de se laver gratuitement
-8	Soin	Un barbier offre une coupe gratuite au PJ
-9	Argent	Trouve 1D20 PO par terre
-10	Argent	Trouve un bijou perdu d’une valeur d’1D20 PO
-11	Argent	Quelqu’un paye le PJ 1D20 PO pour un petit service 
-12	Argent	Gagne un pari ou un jeu (1D20 PO)
-13	Economie	Commerçant sympa, promotion
-14	Economie	Troc avantageux (échanger un petit objet contre un autre similaire d’une qualité supérieure)
-15	Service	On leur cire les chaussures et brosse gratuitement les manteaux
-16	Service	On leur nettoie gratuitement leurs habits
-17	Service	On leur reprise gratuitement leurs habits (ou autre menue réparation)
-18	Service	On leur entretien gratuitement leurs armes (aiguisées, frottées et huilées)
-19	Objet 	Trouvent un petit objet utile perdu ou abandonné (torche, couverture, corde, outre, bâton de marche, etc.)
-20	Objet	On leur donne un petit objet utile (bougie, briquet, plume, parchemin, etc.)
-21	Objet	Trouvent un petit objet de consommation courant (blague à tabac, savon parfumé, flûte, gants de laine, etc.)
-22	Objet	Reçoivent un petit cadeau (collier de perles d’argile ou de bois, mouchoir brodé, une jolie pierre, un jouet en bois)
-23	Art	Reçoivent un poème, un dessin, une chanson personnalisée, etc. 
-24	Raccourci	Les PJ gagnent du temps, avancent plus vite
-25	Météo	Les PJ ont de la chance avec la météo (éclaircie soudaine, temps favorable, etc.)
-26	Foi	Une expérience mystique qui conforte la foi des PJ
-27	Moral	Quelque chose qui remonte le moral, encourage les PJ
-28	Contact	Rencontrent un personnage sympa ou un contact potentiel
-29	Amour	Quelqu’un flirte avec le personnage
-30	Spectacle	Assistent à un spectacle de rue
-
-(30+) Super journée, le personnage gagne ou économise 1D20x10 PO.
-1	Nourriture	On offre aux PJ le gîte et de couvert pour la nuit 
-2	Nourriture	On offre aux PJ un banquet
-3	Nourriture	Plusieurs jours de rations
-4	Nourriture	Les PJ trouvent du gibier en abondance ou une grosse prise
-5	Nourriture	Plusieurs bouteilles de vin ou d’alcool fort 
-6	Soin	Les PJ ont un soin esthétique gratuit (bain, massage, etc.)
-7	Amour	Les PJ ont une aventure d’un soir
-8	Informations	Des informations utiles sur la région ou leur quête (+1 à +3)
-9	Argent	Trouve une bourse d’1D20 x10 PO
-10	Argent	Trouve un bijou perdu d’une valeur d’1D20 x10 PO
-11	Argent	Quelqu’un paye généreusement le PJ pour un service (1D20 x10 PO)
-12	Argent	Gagne un pari ou un jeu (1D20 x10 PO)
-13	Argent	Gagne un concours local (1D20 x10 PO)
-14	Economie	Commerçant sympa, promotion
-15	Economie	Troc avantageux (échanger un objet contre un autre similaire d’une qualité supérieure) (gagne 1D20 x10 PO)
-16	Economie	Vend un objet plus que sa valeur (gagne 1D20 x10 PO)
-17	Service	On leur répare gratuitement leur équipement ou autre service spécialisé
-18	Transport	Obtient une carte ou une place en diligence
-19	Objet	Gagne un lot dans une foire (d’une valeur d’1D20 x10 PO)
-20	Objet	Trouve un trésor d’une valeur d’1D20 x10 PO
-21	Objet	Obtient un objet utile d’une valeur d’1D20 x10 PO (sac à dos de qualité, dague, épée, lanterne, etc.)
-22	Objet	Reçoivent un cadeau de valeur (1D20 x10 PO)
-23	Abri	Bonus au jet de Survie pour la nuit, passe une nuit tranquille / confortable
-24	Augure	Une divination spontanée (PM 1 à 3)
-25	Contact	Rencontre un personnage sympa ou un contact utile (+1 à +3)
-26	Animal amical	Chien, oiseau ou autre animal de compagnie s’attache au PJ
-27	Esprit	Un esprit de la nature aide les PJ (PM 1 à 3)
-28	Allié	Un allié assiste les PJ dans leur quête (+1 à +3)
-29	Soigneur	Soigne gratuitement les PJ
-30	Spectacle	Assistent à un spectacle de qualité (concert, bal, opéra)
-31	Art	Reçoivent un objet d’art (d’une valeur d’1D20 x10 PO)
-32	Erudition	Reçoivent des conseils d’un érudit (+1 à +3) ou trouvent des livres (d’une valeur d’1D20 x10 PO)
-33	Mécène / Patron	Reçoit le soutien financier d’un personnage puissant (1D20 x10 PO)
-34	Magie	Bénéficie d’un sort PM 1 à 3
-35	Foi	Bénéficie d’un miracle PM 1 à 3
-36	Parchemin	Trouve un parchemin magique (PM 1 à 3)
-37	Potion	Trouve une potion magique (PM 1 à 3)
-38	Ingrédient	Trouve un ingrédient végétal magique (PM 1 à 3)
-39	Ingrédient	Trouve un ingrédient minéral magique (PM 1 à 3)
-40	Ingrédient	Trouve un ingrédient animal magique (PM 1 à 3)
-
-(40+) Chanceux, le personnage gagne ou économise 1D20x100 PO.
-1	Argent	Trouve 1D20 x100 PO
-2	Argent	Trouve un ou des bijoux perdus d’une valeur d’1D20 x100 PO
-3	Argent	Trouve le butin d’un gang (valeur 1D20 x100 PO)
-4	Argent	Vend une information très convoitée à la bonne personne (valeur 1D20 x100 PO)
-5	Argent	Gagne au jeu (valeur 1D20 x100 PO)
-6	Argent	Gagne un concours local (1D20 x100 PO)
-7	Argent	Un noble ou un riche marchand le gratifie largement pour son aide (1D20 x100 PO)
-8	Argent	Le PJ remporte un duel d’honneur contre un noble… et reçoit une rançon ou un prix (1D20 x100 PO)
-9	Objet	Gagne le gros lot dans une foire (d’une valeur d’1D20 x100 PO)
-10	Objet	Trouve un objet de collection d’une valeur d’1D20 x100 PO (trouvaille archéologique, objet d’art, livre rare)
-11	Objet	Trouve un sac ou un coffre ou une caisse perdue, rempli d’objets d’une valeur d’1D20 x100 PO 
-12	Objet	Les PJ tombent sur les restes d’une caravane pillée
-13	Objet	Les PJ trouvent les restes d’un aventurier
-14	Objet	Reçoivent un cadeau de valeur par quelqu’un qui veut les remercier ou s’attirer leurs bonnes grâces (1D20 x100 PO)
-15	Filon	Les PJ trouvent des pépites d’or
-16	Economie	Commerçant sympa, promotion sur des objets chers
-17	Economie	Troc avantageux (échanger un objet contre un autre similaire d’une qualité supérieure) (gagne 1D20 x100 PO)
-18	Economie	Vend un objet bien plus que sa valeur auprès d’un collectionneur (gagne 1D20 x100 PO)
-19	Animal	Les PJ trouvent des chevaux sans maître
-20	Animal	Les PJ capturent un monstre ou une créature inhabituelle
-21	Dette	Quelqu’un fait un don aux PJ en règlement d’une vieille dette ou en récompense d’une action passée
-22	Esprit	Un esprit magique aide les PJ (PM 2 à 5,5)
-23	Magie	Bénéficie d’un sort PM 2 à 5,5
-24	Foi	Bénéficie d’un miracle PM 2 à 5,5
-25	Ingrédient	Trouve un ingrédient magique (PM 2 à 5,5)
-26	Parchemin	Trouve un parchemin magique (PM 2 à 5,5)
-27	Potion	Trouve une potion magique (PM 2 à 5,5)
-28	Augure	Une divination spontanée (PM 2 à 5,5)
-29	Allié	Rencontre un allié ou un contact très utile (+2 à +6)
-30	Objet magique	Trouve un objet magique de bas niveau (PM 1 à 1,5)
-
-(50+) Très chanceux, le personnage gagne ou économise 1D20x1000 PO.
-1	Argent	Trouve 1D20 x1000 PO
-2	Argent	Trouve des bijoux d’une valeur d’1D20 x1000 PO
-3	Argent	Gagne le jackpot au jeu (valeur 1D20 x1000 PO)
-4	Argent	Les PJ sauvent la vie d’un riche personnage (1D20 x1000 PO)
-5	Argent	Récompense pour un service ou une information capitale à une puissance (royaume, guilde, culte…) 
-6	Objet	Trouve des objets de collection d’une valeur d’1D20 x100 PO (trouvaille archéologique, objet d’art, livre rare)
-7	Objet	Trouve un coffre rempli d’objets d’une valeur d’1D20 x1000 PO 
-8	Objet	Les PJ tombent sur les restes d’une caravane marchande
-9	Objet	Découverte d’un trésor oublié dans une crypte, un ancien champ de bataille ou une ruine (valeur 1D20 x1000 PO)
-10	Animal	Les PJ capturent un monstre ou une créature inhabituelle
-11	Filon	Les PJ trouvent un filon de minerais précieux ou de gemmes
-12	Héritage	Les PJ touchent un héritage inattendu
-13	Esprit	Un esprit magique aide les PJ (PM 5 à 9,5)
-14	Magie	Bénéficie d’un sort PM 5 à 9,5
-15	Foi	Bénéficie d’un miracle PM 5 à 9,5
-16	Ingrédient	Trouve un ingrédient magique (PM 5 à 9,5)
-17	Parchemin	Trouve un parchemin magique (PM 5 à 9,5)
-18	Potion	Trouve une potion magique (PM 5 à 9,5)
-19	Allié	Rencontre un allié ou un contact puissant (+5 à +9)
-20	Objet magique	Trouvent un objet magique (PM 1 à 4,5)
-
-(60+) Lutino
-Les PJ croisent un petit lutin fort sympathique qui leur accorde à chacun un don et disparaît (se reporter aux règles de création de personnage). Traditionnellement, Lutino offre des cookies à ceux qu’il croise. Lutino et Diablino sont immortels et invincibles. Ils font partie des mystères d’Azurhyòn.
-
-Désagréments
-Le personnage est affecté par un désagrément sans conséquence grave, le genre de petits tracas de la vie quotidienne qui vous pourrissent la journée.
-1	Une guêpe s’est glissée dans la tunique/le casque.
-2	Le personnage marche dans la merde, l’odeur reste.
-3	Il perd un bouton, une boucle ou une lanière essentielle.
-4	Son sac se renverse au sol, son contenu se répand partout.
-5	Il reçoit une fiente d’oiseau dessus.
-6	Un chien le suit en aboyant sans relâche.
-7	Sa boisson est imbuvable, il y a un truc dedans
-8	Il a le hoquet sans arrêt pendant une heure.
-9	Une envie pressante… sans lieu décent pour s’isoler.
-10	Son repas est immangeable (trop salé, trop épicé, moisi…).
-11	Quelqu’un lui renverse un pot de chambre dessus.
-12	Un homme saoul lui vomi dessus. 
-13	Il oublie sans arrêt le mot qu’il avait sur le bout de la langue.
-14	Il est constamment interrompu quand il veut parler.
-15	Une mèche de cheveux/blessure/griffure le démange atrocement.
-16	Il a un caillou dans la chaussure ou dans son armure, mais ne peut s’arrêter.
-17	Un moustique le harcèle.
-18	Il se rend compte qu’il a une tache sur le nez / un truc vert sur les dents
-19	Quelqu’un insiste lourdement pour lui vendre une babiole inutile.
-20	Il entend une chanson qu’il déteste, et elle lui reste en tête.
-21	Il se fait éclabousser par un char ou une monture.
-22	Il est suivi par un mendiant trop collant.
-23	Il déchire accidentellement un vêtement.
-24	Il renverse de l’encre/un liquide coloré sur ses affaires.
-25	Des gens se moquent de lui.
-26	Il reçoit une écharde ou se pique avec une ronce.
-27	Il trébuche dans un escalier ou dans la rue (et se fait remarquer).
-28	Il égare un objet (valeur 1D20 PO).
-29	Il est réveillé en sursaut par un coq fou ou une cloche prématurée.
-30	Un ronfleur l’empêche de dormir.
-31	Un sifflement ou acouphène persiste dans son oreille.
-32	Une tique / puce / sangsue s’est logée à un endroit fâcheux.
-33	Une mouche ou un grain de sable dans l’œil pendant une discussion.
-34	Il attrape une ampoule au pied
-35	Quelqu’un éternue sur lui. Fort. Et deux fois.
-36	On lui sert du lait tourné / de la viande avariée / du pain moisi, en tout cas un truc infect.
-37	Il se fait involontairement éclabousser de vin / soupe / graisse.
-38	Il fait tomber sa bourse et des enfants s’enfuient avec ses pièces avant qu’il ne puisse toutes les ramasser (-1D20 PO).
-39	Le vent soulève une poussière fine qui pique les yeux et s’infiltre à travers les vêtements. Le personnage tousse et se sent sale.
-40	Il souffre de frottements irritants à cause de ses vêtements ou d’un harnais mal ajusté.
-41	Attrape un bon coup de soleil ou un petit rhume.
-42	Une odeur désagréable le poursuit toute la journée. D’où vient-elle ?
-43	Il se réveille avec des douleurs qui le poursuivent toute la journée.
-44	Sa monture est récalcitrante aujourd’hui. 
-45	Il fait de l’eczéma, a des rougeurs et irritations. 
-46	Il a une rhinite allergique et passe la journée à éternuer. 
-47	Il se cogne le petit orteil contre un meuble/un rocher et jure pendant dix minutes.
-48	Son équipement grince ou cliquette sans arrêt (armure, sac, armes…), ça lui tape sur les nerfs.
-49	On lui vole son déjeuner / renverse son repas
-50	Il se trompe de chemin et perd une heure
-
-Contrariétés
-	Le personnage doit faire face à un obstacle contraignant, qui lui prend du temps (1/2 journée de voyage) ou de l’argent (1D20 x10 PO).
-1	Une roue de chariot casse, il faut la réparer. Une monture se blesse, soins nécessaires. Le personnage perd une chaussure.
-2	Le pont prévu est effondré, une rivière est sortie de son lit, le chemin de montagne s’est éboulé, détour obligatoire.
-3	Une taxe locale impromptue est exigée à l’entrée d’un territoire.
-4	Un garde tatillon exige de fouiller les affaires, ce qui retarde le groupe.
-5	Le personnage a oublié un objet important à l’étape précédente. Demi-tour.
-6	Les bottes ou vêtements sont abîmés et doivent être rapiécés ou remplacés.
-7	Une cérémonie religieuse locale empêche le groupe de continuer. 
-8	Une dispute éclate avec un local, et la garde s’en mêle. Temps perdu ou amende.
-9	Un artisan exige une rallonge ou un délai pour un service commandé.
-10	Une monture est en fuite, il faut la retrouver.
-11	Une taverne locale refuse de servir les étrangers sans un "cadeau" au patron.
-12	Les vivres ont tourné ou sont infestés, il faut les remplacer.
-13	Un voleur tente de subtiliser un objet ; réussite ou pas, il faut vérifier tout.
-14	Un objet important est tombé dans un endroit peu accessible, il faut le récupérer.
-15	Une barrière fermée exige de convaincre ou payer le garde.
-16	Une querelle ou un accident bloque l’avancée.
-17	Des papiers ou laissez-passer sont demandés, et doivent être obtenus.
-18	Une pénurie locale fait grimper les prix temporairement.
-19	Une affaire locale provoque un contrôle renforcé aux portes, les gardes cherchent des criminels et les PJ sont suspects.
-20	Un artisan prend du retard pour un service attendu en raison d’une maladie, d’un problème familial ou autre.
-21	Le groupe doit attendre l’arrivée d’un bac pour traverser une rivière mais le passeur, saoûl, s’est endormi.
-22	Une sentinelle endormie empêche de franchir une porte ou un poste.
-23	Une manifestation ou foire bloque les rues pendant des heures.
-24	Un marchand accuse les PJ de vol. Faux, mais il faut clarifier.
-25	Une demande d’aide d’un local est difficile à refuser (blessé, enfant, etc.).
-26	Une tempête, un animal sauvage ou un mauvais coup ruine la tente. 
-27	Un EC en cuisine rend malade les PJ pendant quelques heures.
-28	Un arbre abattu en travers du chemin gêne le passage. Il faut le dégager. 
-29	Une charrette renversée bloque la route, il faut aider ou contourner.
-30	Une route en mauvais état (nids de poule, boue, ronces, pavés disjoints, etc.) ralentit la progression des personnages. 
-31	Des enfants chapardeurs s’enfuient avec un objet. Il faut les poursuivre.
-32	Un feu de forêt ou incendie empêche de passer par la route prévue. 
-33	Une enquête locale pousse les PJ à rester pour témoigner.
-34	Un voleur vole les PJ ou un escroc les arnaque (-1D20 x 10 PO).  
-35	Le personnage a la diarrhée.
-36	Le sac du personnage se déchire, éparpillant ses affaires (il met peut-être du temps à s’en rendre compte et sème une traînée de vêtements sur son passage). 
-37	Une anomalie dans le Voile piège le groupe dans une illusion
-38	Une anomalie dans le Voile modifie l’espace-temps, faisant perdre du temps aux PJ
-39	Un esprit farceur décide d’embêter les PJ
-40	Un salopac souille le personnage. 
-
-	Les Salopacs font partie des mystères d’Azurhyòn. Ils ont l’apparence de vieux dégueulasses à poil qui souillent leur victime avant de disparaître en rigolant, aussi mystérieusement qu’ils sont apparus. Ils sont insaisissables, éternels et immortels. 
-
-Dangers
-	Obstacles qu’on ne surmonte que difficilement (nécessite un test, voire une PP). Peut prendre du temps (quelques jours) ou de l’argent (-1D20 x100 PO). 
-1	Le personnage tombe malade (empoisonnement, fièvre des marais…)
-2	Eau polluée (test d'Endurance), le personnage attrape la diarrhée. 
-3	Bourbier, gué dangereux (test de Mouvement et de Vigueur)
-4	Passage étroit à flanc de montagne (test d'équilibre), chemin escarpé (test d'escalade), faille à sauter (test de saut)
-5	Une prophétie annonce qu’un danger menace le village et que c’est aux PJ de l’écarter, les obligeant à résoudre le problème
-6	Le personnage est victime d’un vol (-1D20 x100 PO)
-7	Un piège ou un effondrement provoque une blessure. 
-8	Le personnage est victime d’une malédiction gênante (mauvais sort)
-9	Une partie de l’équipement est gravement endommagé (-1D20 x100 PO)
-10	Une autorité locale accuse le personnage d’un crime qu’il n’a pas commis : il est arrêté et doit se disculper.
-11	Un démon mineur ou esprit vindicatif poursuit le PJ.
-12	Le PJ est la cible d’une rumeur infamante (sorcellerie, trahison, adultère…), qui nuit à sa réputation et dont il doit se justifier. 
-13	La monture du personnage est blessée ou tuée. 
-14	Le personnage est blessé à la suite d’une attaque ou d’une mauvaise chute. 
-15	Des problèmes locaux font perdre plusieurs jours de voyage au personnage (chargement immobilisé ou gros détour à faire). 
-16	Une créature magique ou une ancienne connaissance demande une dette de sang ou de service.
-17	Le personnage doit lutter contre un incendie. 
-18	Les personnages brisent un tabou local sans le savoir et doivent se racheter. 
-19	Des papiers ou laissez-passer sont demandés, et doivent être obtenus mais l’administration est lente ou corrompue.
-20	Il faut aider des marchands en détresse ou des réfugiés. Les PJ ne peuvent pas laisser ces pauvres gens se débrouiller par eux-mêmes et restent avec eux quelques jours. 
-21	Un escroc les arnaque (-1D20 x 100 PO).  
-22	Une anomalie dans le Voile piège le groupe dans une illusion.
-23	Une anomalie dans le Voile modifie l’espace-temps, faisant perdre du temps aux PJ
-24	Le groupe tombe sur une région maudite ou un lieu hanté qui altère leur sommeil ou leurs rêves pendant plusieurs nuits (ou une âme en peine les piège dans une boucle temporelle).
-25	Une personne aimée ou un allié est en danger, forçant à reconsidérer les priorités.
-26	Une faction ou guilde ennemie met une prime sur la tête du personnage.
-27	Une infection magique ou une malédiction subtile ronge peu à peu le PJ, nécessitant un remède rare.
-28	Une distorsion magique aspire temporairement le personnage dans une dimension inconnue.
-29	Le PJ est ensorcelé ou charmé à son insu, agissant contre ses intérêts pendant un temps.
-30	Le personnage découvre qu’un ennemi a usurpé son identité quand on vient lui demander des comptes.
-31	Péril Facile : canidés (loups, bande de chiens errants, etc.)
-32	Péril Facile : animaux géants (rats géants, chauve-souris géante, etc.) 
-33	Péril Facile : peaux-vertes (gobelins, hobgobelins, etc.)
-34	Péril Facile : morts vivants (squelettes, zombis, goules, etc.)
-35	Péril Facile : humains (groupe de paysans, de voyous ou de bandits)
-36	Péril Local : 1 adversaire impressionnant pour le groupe (un ogrillon par exemple, un loup ou un sanglier géant) 
-37	Péril Facile : petites créatures magiques, plus facétieuses que dangereuses (pixies, démons, etc.)
-38	Péril Facile : créatures des marais (vers, sangsues, grenouille géante, etc.)
-39	Péril Facile : monstres-plantes
-40	Péril Facile : reptiles (serpent venimeux, gros lézard, etc.)
-
-IC créature	PM	Péril
-0	0	Facile
-(E)
-7	0,5	
-14	1	
-21	1,5	
-28	2	
-
-Périls
-	Un danger qui coûte généralement des PP à surmonter. Les gens normaux y laissent souvent la vie. Il est parfois sage de fuir. Le MJ refait un jet pour déterminer le niveau de péril. 
-Dé	1-3	4-9	10	11-20
-Péril	Péril national	Péril régional	Diablino	Péril local
-
-Classification des monstres
-Dé	IC créature	PM	Péril
-20	35	2,5	Local (D)
-18-19	42	3	
-16-17	49	3,5	
-14-15	56	4	
-13	63	4,5	Comtal (C)
-12	70	5	
-11	77	5,5	
-10	Diablino
-9	84	6	Régional
-(B)
-8	91	6,5	
-7	98	7	
-6	105	7,5	
-5	112	8	
-4	119	8,5	
-3	126	9	National
-(A)
-2	140	10	
-1	154	11	
-	Pour le niveau de péril on compte un monstre par PJ ou un monstre niv+1 pour 2 PJ ou un monstre niv+2 pour 4 PJ. Ex : avec un 12 au jet de péril et 4 PJ, soit 4 monstres IC 70, soit 2 monstres IC 77, soit 1 monstre IC 84. 
-
-Diablino : Les PJ croisent un petit diablotin qui les agonit d’injures et donne à chacun une tare avant de disparaître (se reporter aux règles de création de personnage, si le personnage tombe sur une tare de limitation de Carac, il prend -1 Carac à la place). Diablino est immortel et invincible. Il fait partie des mystères d’Azurhyòn.
-
-Liste 100 monstres
-1	Araignées géantes
-2	Insectes sociaux géants (fourmis, gehknas, blattes, termites etc.)
-3	Insectes volants géants (mouches, guêpes, moustiques géants, etc.)
-4	Myriapodes venimeux (mille-pattes géant, centipède, chenilles, etc.)
-5	Insectes monstrueux (mante géante, punaise-bombe, scarabées géants, etc.)
-6	Scorpions géants, uropyge, pseudoscorpion, etc.
-7	Escargots, limaces, sangsues, etc.
-8	Papillons magiques
-9	Vers, apodes, vers charognards, wurms, etc.
-10	Loups géants (loup noir, loup des glaces, etc.)
-11	Suidés (sangliers géants, entélodonte, etc.)
-12	Canidés (renards magiques, chiens, etc.)
-13	Cervidés (cerf, chevreuils, dama, magiques ou non)
-14	Belette, blaireau sanguinaire, glouton, ratel, furet de feu …
-15	Ursidés 
-16	Rongeurs (rats, rats géants, etc.)
-17	Singes (gorilles, chimpanzés, chabouins, gnoars, etc.)
-18	Equidés (pégases, licornes, chevaux de feu, chevaux célestes, etc.)
-19	Félins (lion, puma, panthère cuirassée, etc.)
-20	Bovidés (auroch, taureau, bison, yack, taureau d’airain, etc.) 
-21	Chèvre, mouflon, bouquetin, etc.
-22	Mastodontes (éléphant, rhinocéros, hippopotame, béhémoth, oliphant, etc.)
-23	Wargs, hyènes, hyaénodons, etc.
-24	Chauves-souris, wak-waks, gobe-lune, méphites, etc.
-25	Gastornis (oiseaux coureurs)
-26	Rapaces (aigles, faucons, hiboux, etc.)
-27	Oiseaux charognards (corbeaux, crebains, corneilles à 3 yeux, vautours, marabouts, etc.)
-28	Oiseaux aquatiques et marins (canards, échassiers, mouettes, etc.) 
-29	Oiseaux des plaines et forêts (hirondelle, mésange, coucou, faisan, perroquet, etc.)
-30	Cuirassés : hérissons, tatous, tortues, etc.
-31	Tentaculaires (fouetteurs, charognards rampants, etc.)
-32	Serpents (boas, pythons,cobras, serpent-bélier, serpent à plume, guivre, etc.)
-33	Lézards
-34	Reptiles : tortues, crocodiliens, kromodox, etc.
-35	Tritons, salamandres, etc.
-36	Crapauds et batraciens géants
-37	Fruits de mer, palourdes, crabes géants, etc.
-38	Poissons (requins, etc.)
-39	Poulpes (pieuvre, calamar géant, poulpe arboricole, etc.)
-40	Autres créatures aquatiques : cétacés, méduses, etc.
-41	Dinosaures aquatiques, mégalodon, etc.
-42	Monstres marins : sirènes, chevaux marins, lions marins, etc.
-43	Gros monstres marins : kraken, léviathan, hydre, etc.
-44	Algues, coraux, plantes et créatures aquatiques
-45	Limons, blobs et gelées
-46	Mousses et lichens
-47	Champignons 
-48	Arbres magiques (arbres enlaceurs, cogneurs, etc.)
-49	Plantes dangereuses (carnivores, magiques, etc.)
-50	Lianes, plantes grimpantes, ronces, etc. 
-51	Fleurs magiques
-52	Sylviens (treefolk), tréants, tertres
-53	Créatures minérales
-54	Golems et mécas
-55	Parasites
-56	Créatures préhistoriques
-57	Créatures hybrides (hibours, crocodours, varhino, cerlinx, elanion, etc.)
-58	Chimères (chimère, manticore, sphinx, qilin, lammasu, etc.)
-59	Chimères magiques (pétrifiants notamment) : basilic, coquatrix, méduses, etc. 
-60	Monstres volants : griffons, hippogriffes, panthère ailée, pégase cornu, etc.
-61	Créatures élémentaires (phénix, oiseaux-tonnerres)
-62	Créatures immenses (Oiseau rokh, tortue-île, etc.)
-63	Gros streums (urvak, thobal, guivre, etc.)
-64	Dragons, wyverns, drakôns, ryu, etc.
-65	Draconides (créatures animal-dragon)
-66	Mi-humains : centaures, damoiseaux, arachnelfes, etc.
-67	Humanoïdes : satires, faunes, minotaure, etc.
-68	Créatures magiques peu agressive (téléport, etc.)
-69	Fées, pixies, lutins, trognoms, farfadets, etc.
-70	Djinns, effrits, génies, etc.
-71	Dryades, naïades, sylphes, etc.
-72	Elémentaires
-73	Géants, ogres, cyclopes, triclopes, etc.
-74	Trolls (des bois, des marais, des cavernes, géants, etc.)
-75	Métamorphes : garous et théranthropes, mimics, dopple, etc.
-76	Fantômes, spectre, dame blanche, banshee, nashgûl …
-77	Esprits : follets, croque-mitaine, poltergeist, ankou, acheri, etc.
-78	Ombres, voleur d’âme, dépresseur, brumeux, etc.
-79	Sorcières, guenaudes, lamia, etc.
-80	Morts-vivants (squelettes, zombis, faucheuse, momie, etc.)
-81	Vampire, liche, nécromant, momie royale, etc. 
-82	Nécrophages (goules, blêmes, décharnés, etc.) 
-83	Autres créatures liées aux morts-vivants (épouvantails, armures animées, etc.)
-84	Volants maléfiques (harpies, striges, singes volants, gargouilles, etc.)
-85	Démons et diables
-86	Asuras, onis, kamis et démons de diverses cultures, monstres infernaux
-87	Abominations chaotiques (tyrannoeil, hécatonchire, etc.)
-88	Monstruosités horrifiques (chtul, alien, etc.)
-89	Mange-truc (mange-terre, mange-magie, etc.)
-90	Synéïdes
-91	Créatures interplanaires, monstres astraux, etc.
-92	Monstres-esprits (inugami, wendigo, etc.)
-93	Créatures célestes, monstres divins
-94	Bandits 
-95	Pillards Peaux-Vertes, Elfes Noirs, etc.
-96	Anihoms
-97	Sectes maléfiques
-98	Créatures mythologiques 
-99	Créatures d’un autre monde 
-100	Retirez deux fois
-
-
+		<div>
+		Score des PJs en Survie (Exploration, PER) :
+		<input type="number" th:field="*{survie}"/>
+		<button type="submit" name="update"> &#128190; </button> 
+		</div>
+		
+		<div>
+		Jet de bash : 
+		<input type="number" th:value="*{bash.jet}" disabled/>
+		<input type="hidden" th:field="*{bash.jet}"/>
+		<input type="hidden" th:field="*{bash.gravite}"/>
+		<input type="hidden" th:field="*{bash.peril}"/>
+		<input type="hidden" th:field="*{bash.deEvnmt}"/>
+		<button type="submit" name="lancerBash"> Lancer le bash </button> 
+		</div>
+		
+		<div th:if="*{bash.bash}"> Mauvais évènement : 
+		</div>
+		<div th:if="*{bash.jet >= 20}"> Chance ! 
+		</div>
+		<div th:unless="*{bash.bash || bash.jet >= 20}"> Rien de particulier. </div>
+		<span th:text="*{bash.effet}"></span>
+		<input type="hidden" th:field="*{bash.critique}"/>
+		<input type="hidden" th:field="*{bash.bash}"/>
+		<input type="hidden" th:field="*{bash.effet}"/>
+		<br/>
+		<button type="submit" name="bashEffet"> Relancer l'évènement </button> 
+		
+		<h2>Lieu notable</h2>
+		
+		<div>Choisir 1 lieu notable parmi :
+			<ul>
+  				<li><span th:text="*{lieu1.nom}"></span> : <span th:text="*{lieu1.description}"></span></li>
+  				<li><span th:text="*{lieu2.nom}"></span> : <span th:text="*{lieu2.description}"></span></li>
+  			</ul>
+		</div>
+		<input type="hidden" th:field="*{lieu1.de8}"/>
+		<input type="hidden" th:field="*{lieu1.de30}"/>
+		<input type="hidden" th:field="*{lieu1.nom}"/>
+		<input type="hidden" th:field="*{lieu1.description}"/>
+		<input type="hidden" th:field="*{lieu2.de8}"/>
+		<input type="hidden" th:field="*{lieu2.de30}"/>
+		<input type="hidden" th:field="*{lieu2.nom}"/>
+		<input type="hidden" th:field="*{lieu2.description}"/>
+		<button type="submit" name="lieuNotable"> Relancer les lieux </button> 
+		
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
 Lieu notable 
 
 	Le MJ pourra générer aléatoirement 2 lieux notables par jour et conserver celui qui lui plait le plus. 
@@ -1689,6 +1157,7 @@ Quart de garde :
 
 Si les personnages sont plusieurs, ils arrivent normalement à se maintenir éveillés mutuellement, ils ont +6 à leur jet de Volonté. Il arrive néanmoins que les sentinelles s’endorment quand même. 
 
+	</form>
 	
 </body>
 </html>

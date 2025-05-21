@@ -49,7 +49,7 @@ public class MeteoDto {
 		PRINTEMPS,
 		ETE,
 		AUTOMNE,
-		HIVERS;
+		HIVER;
 		
 		@Override
 		public String toString() {
@@ -60,8 +60,8 @@ public class MeteoDto {
 	        		return "Eté";
 	        	case AUTOMNE:
 	        		return "Automne";
-	        	case HIVERS:
-	        		return "Hivers";
+	        	case HIVER:
+	        		return "Hiver";
 	        	default:
 	        		return null;
 			}
@@ -72,7 +72,7 @@ public class MeteoDto {
 	private Saisons sais = Saisons.PRINTEMPS;
 	private int hier = 8;
 //	0: tps de saison, 1: assez beau, 2: beau, 3: très beau, 4:tps de saison, 5:très mauvais, 6:mauvais, 7:assez mauvais
-	private int aujd = 8;
+	private int aujd = 10;
 	
 	public Climats getClim() {
 		return clim;
@@ -97,6 +97,44 @@ public class MeteoDto {
 	}
 	public void setAujd(int aujd) {
 		this.aujd = aujd;
+	}
+	public String tpsToString(int jour) {
+//		0: tps de saison, 1: assez beau, 2: beau, 3: très beau, 4:tps de saison, 5:très mauvais, 6:mauvais, 7:assez mauvais
+		String res = switch(jour) {
+			case 0 -> tempsDeSaison();
+			case 1 -> "Assez beau temps";
+			case 2 -> "Beau temps";
+			case 3 -> "Très beau temps";
+			case 4 -> tempsDeSaison();
+			case 5 -> "Très mauvais temps";
+			case 6 -> "Mauvais temps";
+			case 7 -> "Assez mauvais temps";
+			case 8 -> "Aléatoire";
+			default -> "";
+		};
+		return res;
+	}
+	private String tempsDeSaison() {
+		return switch(this.sais) {
+		case PRINTEMPS -> "Assez beau temps";
+		case ETE -> "Beau temps";
+		case AUTOMNE -> "Assez mauvais temps";
+		case HIVER -> "Mauvais temps";
+		};
+	}
+	
+	public int tempsDeSaisonToInt(int jour) {
+		if(jour == 0 || jour == 4 || jour > 7) {
+			return switch(this.sais) {
+				case PRINTEMPS -> 1;
+				case ETE -> 2;
+				case AUTOMNE -> 7;
+				case HIVER -> 6;
+				default -> jour;
+			};
+		} else {
+			return jour;
+		}
 	}
 
 }

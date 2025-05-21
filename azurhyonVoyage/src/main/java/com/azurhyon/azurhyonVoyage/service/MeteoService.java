@@ -5,31 +5,31 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.azurhyon.azurhyonVoyage.Initialisation.MeteoInit;
 import com.azurhyon.azurhyonVoyage.dto.MeteoDto;
+import com.azurhyon.azurhyonVoyage.dto.MeteoDto.Saisons;
+import com.azurhyon.azurhyonVoyage.model.EffetMeteo;
 import com.azurhyon.azurhyonVoyage.model.MeteoData;
-import com.azurhyon.azurhyonVoyage.repository.MeteoRepository;
 
 @Service
 public class MeteoService {
 	
-	@Autowired
-	MeteoRepository meteoRepo;
+//	@Autowired
+//	MeteoRepository meteoRepo;
 	
 //	MeteoData nouvelleMeteo(MeteoDto meteo) {
 //		MeteoData meteoFinale = new MeteoData();
 //		return meteoFinale;
 //	}
 	
-	MeteoDto update(MeteoDto meteo) {
+	public MeteoDto update(MeteoDto meteo) {
 		int hier = meteo.getHier() ;
 		if(hier < 0 || hier > 7) {
 			hier = tpsAlea();
 			meteo.setHier(hier);
 		}
-		int aujd = meteo.getAujd();
-		if(aujd < 0 || aujd > 7) {
-			aujd = variationDHier(hier);
-		}
+		int aujd = variationDHier(hier);
+		meteo.setAujd(aujd);
 
 		return meteo;
 	}
@@ -68,5 +68,17 @@ public class MeteoService {
         int tps = random.nextInt(8);
 		return tps;
 	}
+
+	public String effets(MeteoDto meteo) {
+		EffetMeteo effet = MeteoInit.METEO.getEffet(meteo.getClim(), meteo.getSais(), meteo.tempsDeSaisonToInt(meteo.getAujd()));
+		return effet.toString();
+	}
+
+	public MeteoDto jourSuivant(MeteoDto meteo) {
+		meteo.setHier(meteo.getAujd());
+		meteo.setAujd(10);
+		return meteo;
+	}
+
 
 }

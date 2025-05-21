@@ -49,7 +49,7 @@ public class MeteoData {
 		PRINTEMPS,
 		ETE,
 		AUTOMNE,
-		HIVERS;
+		HIVER;
 		
 		@Override
 		public String toString() {
@@ -60,8 +60,8 @@ public class MeteoData {
 	        		return "Eté";
 	        	case AUTOMNE:
 	        		return "Automne";
-	        	case HIVERS:
-	        		return "Hivers";
+	        	case HIVER:
+	        		return "Hiver";
 	        	default:
 	        		return null;
 			}
