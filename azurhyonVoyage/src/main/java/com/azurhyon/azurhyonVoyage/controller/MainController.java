@@ -15,6 +15,7 @@ import com.azurhyon.azurhyonVoyage.dto.RouteDto.RouteTypes;
 import com.azurhyon.azurhyonVoyage.dto.MeteoDto.Climats;
 import com.azurhyon.azurhyonVoyage.dto.MeteoDto.Saisons;
 import com.azurhyon.azurhyonVoyage.service.BashService;
+import com.azurhyon.azurhyonVoyage.service.DistanceService;
 import com.azurhyon.azurhyonVoyage.service.LieuService;
 import com.azurhyon.azurhyonVoyage.service.MeteoService;
 import com.azurhyon.azurhyonVoyage.service.OrientationService;
@@ -33,6 +34,9 @@ public class MainController {
 	
 	@Autowired
 	LieuService lieuServ;
+	
+	@Autowired
+	DistanceService distServ;
 	
 	@GetMapping("/azurhyon/voyage")
 	public String pagePrincipale(Model model) {
@@ -106,6 +110,7 @@ public class MainController {
 		model.addAttribute("saisons", Saisons.values());
 		model.addAttribute("effetsDuTemps", meteoServ.effets(voy.getMeteo()));
 		model.addAttribute("routeTypes", RouteTypes.values());
+		model.addAttribute("distance", distServ.computeDist(voy));
 		
 		return "voyage";
 	}

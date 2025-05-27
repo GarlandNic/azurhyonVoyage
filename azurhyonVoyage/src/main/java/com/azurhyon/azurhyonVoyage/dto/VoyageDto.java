@@ -10,7 +10,15 @@ public class VoyageDto {
 	private BashDto bash = new BashDto();
 	private LieuDto lieu1 = new LieuDto(0,0);
 	private LieuDto lieu2 = new LieuDto(0,0);
+	private int vitesse = 0;
+	private int tempsMarche = 0;
 	
+	public int getVitesse() {
+		return vitesse;
+	}
+	public void setVitesse(int vitesse) {
+		this.vitesse = vitesse;
+	}
 	public MeteoDto getMeteo() {
 		return meteo;
 	}
@@ -58,6 +66,12 @@ public class VoyageDto {
 	}
 	public void setLieu2(LieuDto lieu2) {
 		this.lieu2 = lieu2;
+	}
+	public int getTempsMarche() {
+		return tempsMarche;
+	}
+	public void setTempsMarche(int tempsMarche) {
+		this.tempsMarche = tempsMarche;
 	}
 
 }

@@ -14,14 +14,6 @@ import com.azurhyon.azurhyonVoyage.model.MeteoData;
 @Service
 public class MeteoService {
 	
-//	@Autowired
-//	MeteoRepository meteoRepo;
-	
-//	MeteoData nouvelleMeteo(MeteoDto meteo) {
-//		MeteoData meteoFinale = new MeteoData();
-//		return meteoFinale;
-//	}
-	
 	public MeteoDto update(MeteoDto meteo) {
 		int hier = meteo.getHier() ;
 		if(hier < 0 || hier > 7) {
