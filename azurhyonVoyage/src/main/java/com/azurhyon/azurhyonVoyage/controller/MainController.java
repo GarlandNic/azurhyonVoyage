@@ -16,6 +16,7 @@ import com.azurhyon.azurhyonVoyage.dto.MeteoDto.Climats;
 import com.azurhyon.azurhyonVoyage.dto.MeteoDto.Saisons;
 import com.azurhyon.azurhyonVoyage.service.BashService;
 import com.azurhyon.azurhyonVoyage.service.DistanceService;
+import com.azurhyon.azurhyonVoyage.service.EvenementService;
 import com.azurhyon.azurhyonVoyage.service.LieuService;
 import com.azurhyon.azurhyonVoyage.service.MeteoService;
 import com.azurhyon.azurhyonVoyage.service.OrientationService;
@@ -37,6 +38,9 @@ public class MainController {
 	
 	@Autowired
 	DistanceService distServ;
+	
+	@Autowired
+	EvenementService evnmtServ;
 	
 	@GetMapping("/azurhyon/voyage")
 	public String pagePrincipale(Model model) {
@@ -93,6 +97,14 @@ public class MainController {
 	public String lieuNotable(Model model, @ModelAttribute("voyage") VoyageDto voyage) {
 		voyage.setLieu1(lieuServ.nouveauLieux());
 		voyage.setLieu2(lieuServ.nouveauLieux());
+		model.addAttribute("voyage", voyage);
+		return filledPageVoyage(model);
+	}
+	
+	@PostMapping(value="/azurhyon/voyage", params={"evnmtNotable"})
+	public String evnmtNotable(Model model, @ModelAttribute("voyage") VoyageDto voyage) {
+		voyage.setEvnmt1(evnmtServ.nouveauEvnmt());
+		voyage.setEvnmt2(evnmtServ.nouveauEvnmt());
 		model.addAttribute("voyage", voyage);
 		return filledPageVoyage(model);
 	}

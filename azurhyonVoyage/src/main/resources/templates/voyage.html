@@ -154,6 +154,25 @@
 		<input type="number" th:value="${distance}" disabled/>
 		km.
 		</div>
+		
+		<h2>Evènements notables</h2>
+		
+				<div>Choisir 1 évènement notable parmi :
+			<ul>
+  				<li><span th:text="*{evnmt1.nom}"></span> : <span th:text="*{evnmt1.description}"></span></li>
+  				<li><span th:text="*{evnmt2.nom}"></span> : <span th:text="*{evnmt2.description}"></span></li>
+  			</ul>
+		</div>
+		<input type="hidden" th:field="*{evnmt1.de200}"/>
+		<input type="hidden" th:field="*{evnmt1.de100}"/>
+		<input type="hidden" th:field="*{evnmt1.nom}"/>
+		<input type="hidden" th:field="*{evnmt1.description}"/>
+		<input type="hidden" th:field="*{evnmt2.de200}"/>
+		<input type="hidden" th:field="*{evnmt2.de100}"/>
+		<input type="hidden" th:field="*{evnmt2.nom}"/>
+		<input type="hidden" th:field="*{evnmt2.description}"/>
+		<button type="submit" name="evnmtNotable"> Relancer les évènements </button> 
+		
 	<br/>
 	<br/>
 	<br/>
@@ -162,274 +181,6 @@
 	<br/>
 	<br/>
 
-
-
-Evènements notables
-
-	Le MJ pourra générer aléatoirement 2 évènements notables par jour et conserver celui qui lui plait le plus. 
-
-1-	Scène pittoresque	1-50 : traditions locales
-	51-100 : scènes pittoresques
-2-	Rencontre 	1-100 : type de voyageur
-	1-100 : trait de personnalité
-
-Scène pittoresque
-Traditions locales
-1	Costume traditionnel	Tenue de fête
-2	Costume traditionnel	Tenue du quotidien
-3	Costume traditionnel	Tenue rituelle, de cérémonie religieuse
-4	Costume traditionnel	Tenue d’apparat, marque la distinction sociale
-5	Costume traditionnel	Tenue liée à une activité locale
-6	Musique traditionnelle	Flûtes ou autre, jouées par un musicien solitaire
-7	Musique traditionnelle	Tambours et percussions, rythme festif
-8	Musique traditionnelle	Chants pour une cérémonie sociale ou religieuse
-9	Musique traditionnelle	Cornes ou cloches pour annoncer un événement sacré 
-10	Musique traditionnelle	Instruments à corde pour divertir un public
-11	Danse traditionnelle	Danse rituelle à l’occasion d’une cérémonie sacrée
-12	Danse traditionnelle	Danse de séduction ou de mariage
-13	Danse traditionnelle	Danse acrobatique ou danse des armes exécutée par les jeunes ou les guerriers
-14	Danse traditionnelle	Spectacle de danse
-15	Danse traditionnelle	Danse festive, conviviale
-16	Sport traditionnel	Jeux d’adresse
-17	Sport traditionnel	Jeux athlétiques
-18	Sport traditionnel	Jeux intellectuels
-19	Sport traditionnel	Jeux d’équipes
-20	Sport traditionnel	Jeux d’affrontement, un contre un ou deux contre deux
-21	Coutume locale	Rituels spirituels ou symboliques
-22	Coutume locale	Coutumes liées à la nature ou à l’agriculture
-23	Coutume locale	Vie quotidienne et traditions sociales
-24	Coutume locale	Festivités et événements communautaires
-25	Coutume locale	Rites de passage
-26	Coutume locale	Superstitions, croyances populaires et objets rituels
-27	Coutume locale	Tabous locaux
-28	Coutume locale	Rites funéraires
-29	Coutume locale	Célébrations liées à la naissance
-30	Coutume locale	Coutume liée à l’amour ou au mariage
-31	Coutume locale	Coutume liée à l’honneur
-32	Expression locale	Formule de salutation et de politesse, mots courants
-33	Expression locale	Jurons et exclamations
-34	Expression locale	Proverbes, maximes et dictons
-35	Expression locale	Métaphores et comparaisons, expressions imagées
-36	Expression locale	Régionalismes (mot local)
-37	Expression locale	Expressions religieuses ou superstitieuses
-38	Cuisine locale	Entrée chaude
-39	Cuisine locale	Entrée froide
-40	Cuisine locale	Plat de légume
-41	Cuisine locale	Plat de viande
-42	Cuisine locale	Plat de poisson
-43	Cuisine locale	Boulangerie, pâtisserie 
-44	Cuisine locale	Fromage 
-45	Cuisine locale	Dessert 
-46	Cuisine locale	Bière, boisson alcoolisée légère
-47	Cuisine locale	Boisson « soft »
-48	Cuisine locale	Vin, boisson fermentée
-49	Cuisine locale	Alcool fort
-50	Cuisine locale	Infusions, tisanes et décoctions
-Scènes pittoresques
-51	Un mariage champêtre	Les villageois invitent les PJ à danser
-52	Une procession religieuse	Célébration chantante, des enfants lancent des pétales de fleurs.
-53	Une fête locale	Un épouvantail décoré est porté en triomphe
-54	Une noce bruyante	Les invités ont trop bu, ça dégénère en bagarre 
-55	Une célébration nocturne	Atmosphère mystique et rituel chamanique
-56	Un cortège funéraire	Traverse en silence, un instrument joue une mélodie poignante.
-57	Un vieillard	Perd la boule ou parle seul à la tombe de sa femme disparue.
-58	Une mère pleure	Son enfant est malade, elle appelle un prêtre ou un guérisseur.
-59	Un mendiant ivre	Chante une chanson triste ou se lamente sur l’existence.
-60	Une guerrière en sang	Maudit la guerre et renonce à la violence.
-61	Un cochon échappé	Bouscule tout et sème le chaos sur son passage
-62	Une dispute	Deux vieillards s’insultent à grands cris… pour finir par éclater de rire. Ou deux commères se prennent le bec … avant d’unir leurs langues de vipère contre celui ou celle qui tente de les apaiser. 
-63	Un fail	Un saltimbanque raté tente une acrobatie et s’effondre dans une fontaine.
-64	Poursuite	Un chien court après un enfant… qui tient un gigot.
-65	Catastrophe magique	Un mage amateur provoque une mini-explosion de fumée violette aux effets inattendus. 
-66	Bagarre	Une bagarre éclate entre ivrognes devant une taverne.
-67	Querelle d’amoureux	Une dispute de couple devient publique et attire une foule de curieux.
-68	Brutalité policière	Une arrestation brutale par des gardes injustes.
-69	Cruauté infantile	Des enfants jettent des pierres sur un vagabond ou martyrisent un pauvre chaton.
-70	Manifestation	Une manifestation populaire contre une taxe inique.
-71	Charité inspirante	Un ancien soldat apprend à lire à des enfants sur une pierre plate.
-72	Beauté handicapée	Une jeune aveugle joue d’un instrument avec grâce.
-73	Amour vainqueur	Deux amoureux de castes différentes se retrouvent en cachette.
-74	Générosité désintéressée	Une vieille dame donne des biscuits aux orphelins.
-75	Bonté touchante	Un enfant offre une fleur à un PJ “parce que tu as l’air triste”.
-76	Travaux des champs	Des paysans travaillent en chantant.
-77	Bucolique	Un berger joue de la flûte pour ses chèvres.
-78	Bonheur simple	Une famille pique-nique sous un arbre, heureuse et insouciante.
-79	L’Ancienne	Une vieille femme vend des tisanes et raconte des légendes.
-80	Les Enfants	Des enfants jouent au cerceau ou construisent un petit moulin à eau sur un ruisseau.
-81	Accident	Un chariot renversé bloque la route, et les chevaux sont paniqués.
-82	Incendie	Un incendie débute ou se termine
-83	Sauvetage	Un enfant tombe dans un puits et les villageois s’activent pour le sauver.
-84	Dressage	Un cheval s’est emballé ou une bête féroce vient de s’échapper.
-85	Chute	Un arbre vient de tomber sur une hutte, écrasant le toit.
-86	Marché	Un marché animé, avec cris de marchands, parfums d’épices, et voleurs à la tire.
-87	Crieur	Un crieur public annonce des nouvelles du royaume
-88	Caravane	Une caravane passe, avec musiciens, marchands et animaux exotiques.
-89	Controverse	Une controverse entre deux érudits ou une dispute entre deux marchands d’ethnies rivales sur l’origine d’un bijou.
-90	Pèlerins	Des pèlerins partagent leur pain avec les PJ 
-91	Mystique	Une femme parle au vent comme s’il répondait.
-92	Surnaturel	Un enfant prétend avoir vu un esprit dans le puits.
-93	Miracle	Une statue pleure, et des fidèles viennent y poser des offrandes.
-94	Insolite	Un vieillard semble parler aux corbeaux… et ils lui répondent.
-95	Étrange	Une lumière étrange plane au-dessus d’un champ sans raison apparente.
-96	Enterrement fastueux	L’enterrement en grande pompe d’un personnage important
-97	Enterrement misérable	L’enterrement pitoyable d’un pauvre, laissant une famille démunie
-98	Mariage luxueux	Un mariage aristocratique 
-99	Charivari	Un cortège tapageur de jeunes éméchés
-100	Fête locale	Tout le village est décoré pour l’occasion
-
-Personnage
-1	Courrier / Coursier
-2	Messager / Héraut
-3	Diligence / Cocher
-4	Grand seigneur
-5	Diplomate 
-6	Châtelain / seigneur / chevalier
-7	Hobereau (Gentilhomme campagnard), nobliau
-8	Garde
-9	Marchand de matière première agricoles
-10	Marchand de bétail
-11	Marchand d’esclaves
-12	Marchand de bois
-13	Marchand de pierre
-14	Marchand de minerais
-15	Marchand de métal / ferronnerie
-16	Marchand de laine
-17	Marchand de fourrure
-18	Marchand de cuir
-19	Marchand d’armes
-20	Marchand de vin
-21	Marchand de vêtements
-22	Marchand de tissus
-23	Marchand de céramique
-24	Marchand d’épices
-25	Marchand de produits de luxe
-26	Marchand d’ingrédients magiques 
-27	Forgeron 
-28	Tailleur de pierre
-29	Maçon
-30	Maître verrier
-31	Ebéniste
-32	Paysan
-33	Eleveur
-34	Jardinier
-35	Boucher
-36	Fromager
-37	Meunier
-38	Brasseur
-39	Vigneron
-40	Armurier
-41	Bûcheron 
-42	Charpentier
-43	Menuisier
-44	Briquetier, tuilier
-45	Potier
-46	Ouvrier
-47	Tanneur
-48	Barbier
-49	Chirurgien
-50	Médecin
-51	Artilleur
-52	Marin
-53	Orfèvre
-54	Mineur
-55	Cuisinier 
-56	Femme de ménage, bonne
-57	Serviteur, domestique
-58	Vannier, rempailleur
-59	Ramoneur 
-60	Colporteur 
-61	Ouvrier textile, cardeur, foulon
-62	Tisserant, teinturier
-63	blanchisseuse, couturière,
-64	Rôdeur, ranger
-65	Chasseur
-66	Pêcheur
-67	Soldat
-68	Mercenaire
-69	Paladin
-70	Moine
-71	Prélat 
-72	Prêtre 
-73	Pèlerin 
-74	Ermite
-75	Ménestrel, barde
-76	Saltimbanque
-77	Musicien, chanteur
-78	Acteur de théâtre
-79	Artiste de cirque
-80	Artiste 
-81	Peintre 
-82	Aventurier 
-83	Architecte
-84	Ingénieur 
-85	Savant 
-86	Lettré 
-87	Scientifique 
-88	Notaire, juriste
-89	Sciences humaines : cartographe, historien, anthropologue, sociologue, etc.
-90	Etudiant
-91	Lépreux 
-92	Mendiant, vagabond
-93	Devin
-94	Mage
-95	Réfugié
-96	Notable
-97	Officier royal
-98	Anihom
-99	Membre de l’Humanitas (Elfes, Nains, Hafling, Semi-Ogre, etc.)
-100	Posseux
-
-Personnalité
-1-Fan de : a une idole (héros, saint, artiste, etc.) à laquelle il se réfère.	2-Déteste : déteste un personnage (héros, roi, divinité, etc.) qu’il ne connaît pas personnellement mais sur lequel il canalise sa hargne et critique sans cesse.
-3-Religieux : est très pieux, peut voir un signe des dieux dans des choses anodines.	4-Athée : n’est pas du tout croyant, il peut être matérialiste, rationaliste ou athée militant.
-5-Optimiste : positif et enjoué. Il choisit de voir le bien plutôt que le mal dans le monde, même chez ses ennemis. 	6-Pessimiste : voit toujours ce qui ne va pas et redoute toujours le pire.
-7-Tolérant : très ouvert aux autres cultures, races, religions, modes de pensée et curieux d’en apprendre davantage.	8-Intolérant : plutôt buté, fermé aux autres cultures et religions, ethnocentrique, voire raciste.
-9-Bon vivant : aime la vie, faire la fête et profiter des plaisirs de l’existence.	10-Ascèse : frugal, sérieux et modéré en tout, c’est un stoïcien, voire quelqu’un qui se mortifie physiquement (par le jeûne ou autre). Il cherche ainsi à fortifier son âme.
-11-Concerné : s’intéresse beaucoup au monde, cherche à comprendre comment il fonctionne, se renseigne constamment sur ce qu’il se passe.	12-A côté de la plaque : pour une raison ou une autre le personnage n’est pas très en phase avec les réalités du monde.
-13-Progressiste : progressiste, politiquement plutôt à gauche.	14-Conservateur : plutôt de droite, traditionnaliste ou réactionnaire.
-15-Charitable : a la main sur le cœur et aide toujours ceux dans le besoin	16-Egoïste : pense d’abord à lui et sert ses propres intérêts.
-17-Désintéressé : ne demande jamais rien pour lui-même	18-Ambitieux : cherche à s’élever socialement.
-19-Débonnaire : trouve des excuses aux comportements les moins acceptables	20-Sévère : juge les autres sévèrement, et lui-même encore plus
-21-Révolutionnaire : cherche à renverser l’ordre établi (anarchiste, chaotique)	22-Immobiliste : le respect de l’ordre social et de la hiérarchie passe avant tout
-23-Naïf : croit facilement ce qu’on lui raconte, assez candide	24-Suspicieux : se méfie de tout le monde, cherche toujours des motifs secrets
-25-Cœur d’artichaut : tombe amoureux facilement, rêve au grand amour	26-Cœur brisé : ne croit plus du tout à l’amour, se montre cynique à ce sujet
-27-Sincère : toujours vrai, ne supporte pas de ne pas dire la vérité	28-Menteur : aucun scrupule à mentir, tromper, enjoliver souvent
-29-Honnête : scrupuleux à l’excès, ne supporte pas la moindre tromperie, ne laisse jamais une dette impayée	30-Truand : cherche toujours un moyen de s’enrichir, fraude, ment et vole sans vergogne
-31-Perfectionniste : veut toujours bien faire, travaille énormément, au détriment de sa propre santé	32-Paresseux : bâcle les choses, va vite, n’aime pas se prendre la tête, trouve des biais
-33-Prévoyant : organise, planifie, déteste improviser, réfléchit	34-Impulsif : adepte du « on verra bien », spontané, agit
-35-Flegmatique : garde toujours son calme, se contrôle	36-Emporté : s’énerve facilement, tempérament violent
-37-Sociable : essaye de se faire des nouveaux amis partout	38-Solitaire : préfère qu’on le laisse tranquille, ne supporte pas le monde
-39-Téméraire : courageux à l’excès, ne calcule pas les risques	40-Timoré : prudent à l’excès, ose peu
-41-Emotif : se laisse guider par ses émotions, sur-réagit souvent	42-Froid : n’éprouve aucune empathie, manque de tact, peu sympathique
-43-Constant : est toujours d’une humeur égale, fidèle à lui-même, fermement ancré dans ses opinions/idées/convictions	44-Versatile : change d’humeur très rapidement, change d’avis facilement
-45-Blagueur : fait le pitre, raconte des blagues, prend tout à la rigolade, sympa mais lourd	46-Sérieux : toujours sérieux, dépourvu d’humour, un peu coincé
-47-Narcissique : a besoin d’être le centre de l’attention, se met en avant	48-Timide : toujours en retrait, n’ose pas s’exprimer
-49-Idéaliste : veut construire un monde meilleur, se bat pour ses idéaux	50-Cynique : blasé, détaché, réaliste, dur, grinçant, ne veut pas s’impliquer
-51-Influençable : se laisse facilement convaincre, trouve tous les arguments valables	52-Entêté : têtu, voire de mauvaise foi, défend ses opinions, supporte mal d’avoir tort
-53-Intellectuel : cultivé, attache de l’importance aux discours, aux idées, aime la rhétorique, fait de belles phrases	54-Homme d’action : aime l’action, préfère la pratique à la théorie, parle peu pour agir plus
-55-Curieux : esprit ouvert, curieux de tout, aventureux	56-Blasé : peu intéressé, s’ennuie facilement, volontiers casanier
-57-Familier : traite tout le monde pareil, de façon spontanée et détendue, oublie les conventions sociales	58-Snob : méprise le vulgaire, élitiste, cherche à faire partie du « gratin », qu’il révère
-59-Bavard : parle trop	60-Taiseux : ne parle pas assez
-61-Généreux : dépense sans compter	62-Pingre : près de ses sous, n’aime pas dépenser
-63-Suffisant : beaucoup de confiance en soi, se montre en exemple, digère mal les échecs	64-Mal assuré : doute beaucoup de soi-même, toujours peur de mal faire, cherche l’approbation
-65-Pragmatique : efficace, terre-à-terre, a du mal avec les grandes idées et les concepts	66-Distrait : rêveur, ne gère pas bien les contingences matérielles
-67-Obséquieux : rend service, flatte, empressé à servir, un peu envahissant	68-Rude : trop franc, ne prend jamais de gant
-69-Miséricordieux : pardonne volontiers, parfois trop facilement	70-Rancunier : se souvient de tous les affronts et cherche à les venger
-71-Pur : n’aime pas se salir les mains et la conscience	72-Canaille : attiré par le douteux, le trouble, l’illégal
-73-Chaste : plutôt coincé dès que ça touche au sexe opposé ou que ça parle de cul	74-Libidineux : a une vie sexuelle bien remplie, une libido exubérante
-75-Citadin : aime son petit confort, la société policée, rebuté par la campagne	76-Sauvage : aime la nature, les grands espaces, a horreur des villes
-77-Fiable : ne revient jamais sur sa parole, on peut compter sur lui, l’honneur engage  	78-Peu fiable : estime que les promesses n’engagent pas, ou voudrait bien faire mais n’y arrive pas c’est plus fort que lui
-79-Obéissant : respectueux de l’autorité, de la hiérarchie	80-Indépendant : ne supporte pas l’autorité, libre-penseur
-81-Communautaire : l’intérêt général surpasse l’intérêt particulier, l’individu doit s’effacer devant la communauté 	82-Individualiste : il est important de s’épanouir en tant que personne, les libertés individuelles priment sur la communauté
-83-Protecteur : protège le faible, secours la veuve et l’orphelin	84-Dominateur : ne respecte que les forts, méprise la faiblesse
-85-Coquet : soigne son apparence	86-Négligé : se moque de son apparence, souvent sale
-87-Inflexible : campe sur ses positions, se montre intransigeant, est droit à l’excès	88-Flexible : n’hésite pas à faire des entorses à ses principes, prend les règles pour des directives plutôt que des contraintes
-89-Médiateur : cherche à bien s’entendre avec tout le monde, évite les conflits, peut paraître hypocrite du coup	90-Provocateur : libre-penseur, irrévérencieux, irrespectueux
-91-Romantique : espère le grand amour, ne sait pas dire non à un joli minois	92-Misogyne/misandre : a un apriori négatif sur le sexe opposé (mépris, hostilité)
-93-Modeste : n’aime pas être mis en avant, fui les honneurs	94-Starlette : est prêt à tout pour un peu de gloire
-95-Puritain : réprouve l’alcool, le jeu, le sexe, le plaisir	96-Débauché : joue, boit, couche, se drogue 
-97-Leader : veut toujours commander, impose ses vues	98-Suiveur : préfère obéir, fuit les responsabilités
-99-Coopératif : se réjouit du succès des autres, bon esprit d’équipe, prêt à se sacrifier pour le groupe	100-Envieux : jaloux du succès des autres, cherche à les surpasser
 
 Nuitée
 

@@ -1,7 +1,5 @@
 package com.azurhyon.azurhyonVoyage.dto;
 
-import java.util.Random;
-
 public class MeteoDto {
 
 	public static enum Climats {

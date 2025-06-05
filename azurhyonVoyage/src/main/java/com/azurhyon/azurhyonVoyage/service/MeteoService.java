@@ -2,14 +2,11 @@ package com.azurhyon.azurhyonVoyage.service;
 
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.azurhyon.azurhyonVoyage.Initialisation.MeteoInit;
 import com.azurhyon.azurhyonVoyage.dto.MeteoDto;
-import com.azurhyon.azurhyonVoyage.dto.MeteoDto.Saisons;
 import com.azurhyon.azurhyonVoyage.model.EffetMeteo;
-import com.azurhyon.azurhyonVoyage.model.MeteoData;
 
 @Service
 public class MeteoService {
