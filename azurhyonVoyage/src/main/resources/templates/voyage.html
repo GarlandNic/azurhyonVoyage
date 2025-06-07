@@ -157,7 +157,7 @@
 		
 		<h2>Evènements notables</h2>
 		
-				<div>Choisir 1 évènement notable parmi :
+		<div>Choisir 1 évènement notable parmi :
 			<ul>
   				<li><span th:text="*{evnmt1.nom}"></span> : <span th:text="*{evnmt1.description}"></span></li>
   				<li><span th:text="*{evnmt2.nom}"></span> : <span th:text="*{evnmt2.description}"></span></li>
@@ -172,6 +172,34 @@
 		<input type="hidden" th:field="*{evnmt2.nom}"/>
 		<input type="hidden" th:field="*{evnmt2.description}"/>
 		<button type="submit" name="evnmtNotable"> Relancer les évènements </button> 
+		
+		<h2>Nuitée</h2>
+		
+		<h4>Trouver un logement</h4>
+		
+		<div>
+		Score des PJs en Renseignement (Charme, CHA) :
+		<input type="number" th:field="*{renseignement}"/>
+		<button type="submit" name="update"> &#128190; </button> 
+		</div>
+		<div>
+		Résultat : <br/>
+		Confort : <span th:text="${confort}"></span>
+		<input type="hidden" th:field="*{logement.confort}"/>		
+		<input type="hidden" th:field="*{logement.tirageConfort}"/>		
+		<input type="hidden" th:field="*{logement.variationQualite}"/>		
+		<input type="hidden" th:field="*{logement.prix}"/>		
+		<button type="submit" th:if="*{logement.confort <= 3}" name="autreDescrConfort">autre description</button>
+		<br/>
+		Sécurité :
+		<br/>
+		Coût : 
+		<br/>
+		<button type="submit" name="lancerLogement">relancer le logement</button>
+		</div>
+		
+		<h4>Dormir à la belle étoile</h4>
+		
 		
 	<br/>
 	<br/>

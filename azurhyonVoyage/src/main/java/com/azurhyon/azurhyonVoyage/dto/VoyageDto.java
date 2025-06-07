@@ -14,6 +14,8 @@ public class VoyageDto {
 	private int tempsMarche = 0;
 	private EvenementDto evnmt1 = new EvenementDto(0,0);
 	private EvenementDto evnmt2 = new EvenementDto(0,0);
+	private int renseignement = 0;
+	private LogementDto logement = new LogementDto();
 	
 	public int getVitesse() {
 		return vitesse;
@@ -86,6 +88,18 @@ public class VoyageDto {
 	}
 	public void setEvnmt2(EvenementDto evnmt2) {
 		this.evnmt2 = evnmt2;
+	}
+	public int getRenseignement() {
+		return renseignement;
+	}
+	public void setRenseignement(int renseignement) {
+		this.renseignement = renseignement;
+	}
+	public LogementDto getLogement() {
+		return logement;
+	}
+	public void setLogement(LogementDto logement) {
+		this.logement = logement;
 	}
 
 }

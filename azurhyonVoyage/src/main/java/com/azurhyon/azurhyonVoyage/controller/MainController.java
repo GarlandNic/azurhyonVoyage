@@ -18,6 +18,7 @@ import com.azurhyon.azurhyonVoyage.service.BashService;
 import com.azurhyon.azurhyonVoyage.service.DistanceService;
 import com.azurhyon.azurhyonVoyage.service.EvenementService;
 import com.azurhyon.azurhyonVoyage.service.LieuService;
+import com.azurhyon.azurhyonVoyage.service.LogementService;
 import com.azurhyon.azurhyonVoyage.service.MeteoService;
 import com.azurhyon.azurhyonVoyage.service.OrientationService;
 
@@ -38,9 +39,12 @@ public class MainController {
 	
 	@Autowired
 	DistanceService distServ;
-	
+
 	@Autowired
 	EvenementService evnmtServ;
+
+	@Autowired
+	LogementService logmtServ;
 	
 	@GetMapping("/azurhyon/voyage")
 	public String pagePrincipale(Model model) {
@@ -108,6 +112,14 @@ public class MainController {
 		model.addAttribute("voyage", voyage);
 		return filledPageVoyage(model);
 	}
+	
+	@PostMapping(value="/azurhyon/voyage", params={"lancerLogement"})
+	public String lancerLogement(Model model, @ModelAttribute("voyage") VoyageDto voyage) {
+		voyage.setLogement(logmtServ.lancerLogement(voyage.getRenseignement(), voyage.getRoute().getType()));
+		model.addAttribute("voyage", voyage);
+		return filledPageVoyage(model);
+	}
+	
 
 	private String filledPageVoyage(Model model) {
 		VoyageDto voy = new VoyageDto();
@@ -123,6 +135,7 @@ public class MainController {
 		model.addAttribute("effetsDuTemps", meteoServ.effets(voy.getMeteo()));
 		model.addAttribute("routeTypes", RouteTypes.values());
 		model.addAttribute("distance", distServ.computeDist(voy));
+		model.addAttribute("confort", logmtServ.confortDescr(voy.getLogement()));
 		
 		return "voyage";
 	}
